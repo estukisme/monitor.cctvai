@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Monitor CCTV</title>
+
+<style>
+body{
+background:#0b1120;
+font-family:Segoe UI;
+color:white;
+text-align:center;
+}
+
+.title{
+font-size:28px;
+margin-top:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+padding:40px;
+}
+
+.card{
+background:#18224a;
+padding:30px;
+border-radius:12px;
+font-size:20px;
+}
+
+.online{
+color:#00ff88;
+}
+
+.offline{
+color:#ff4040;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="title">
+CCTV SYSTEM MONITOR
+</div>
+
+<div class="grid">
+
+<div class="card">
+Starlink
+<div id="s1">checking...</div>
+</div>
+
+<div class="card">
+Router Utama
+<div id="s2">checking...</div>
+</div>
+
+<div class="card">
+Router CCTV
+<div id="s3">checking...</div>
+</div>
+
+</div>
+
+<script>
+
+function randomStatus(){
+return Math.random() > 0.3
+}
+
+function update(){
+
+let a=randomStatus()
+let b=randomStatus()
+let c=randomStatus()
+
+document.getElementById("s1").innerHTML=a?"<span class='online'>ONLINE</span>":"<span class='offline'>OFFLINE</span>"
+document.getElementById("s2").innerHTML=b?"<span class='online'>ONLINE</span>":"<span class='offline'>OFFLINE</span>"
+document.getElementById("s3").innerHTML=c?"<span class='online'>ONLINE</span>":"<span class='offline'>OFFLINE</span>"
+
+}
+
+setInterval(update,3000)
+update()
+
+</script>
+
+</body>
+</html>
