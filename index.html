@@ -1,35 +1,51 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="id">
 <head>
+
 <meta charset="UTF-8">
-<title>Monitor CCTV</title>
+<title>AI CCTV SYSTEM MONITORING</title>
 
 <style>
+
 body{
-background:#0b1120;
+background:#070e1f;
 font-family:Segoe UI;
 color:white;
-text-align:center;
+margin:0;
 }
 
-.title{
-font-size:28px;
-margin-top:30px;
+.header{
+background:#111c3a;
+padding:18px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+.time{
+text-align:center;
+padding:10px;
+color:#8ea3ff;
 }
 
 .grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
-gap:20px;
-padding:40px;
+gap:25px;
+padding:30px;
 }
 
 .card{
-background:#18224a;
-padding:30px;
-border-radius:12px;
-font-size:20px;
+background:#151f3e;
+border-radius:14px;
+padding:25px;
+font-size:18px;
+box-shadow:0 0 15px rgba(0,0,0,0.6);
+}
+
+.status{
+margin-top:12px;
+font-size:16px;
 }
 
 .online{
@@ -39,55 +55,113 @@ color:#00ff88;
 .offline{
 color:#ff4040;
 }
+
+.metric{
+margin-top:10px;
+color:#bfc7ff;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="title">
-CCTV SYSTEM MONITOR
+<div class="header">
+AI CCTV SYSTEM MONITORING
+</div>
+
+<div class="time" id="time">
+Loading...
 </div>
 
 <div class="grid">
 
 <div class="card">
 Starlink
-<div id="s1">checking...</div>
+<div id="Starlink" class="status"></div>
 </div>
 
 <div class="card">
 Router Utama
-<div id="s2">checking...</div>
+<div id="RouterUtama" class="status"></div>
 </div>
 
 <div class="card">
 Router CCTV
-<div id="s3">checking...</div>
+<div id="RouterCCTV" class="status"></div>
+</div>
+
+<div class="card">
+CCTV Camera
+<div id="CCTV" class="status"></div>
+</div>
+
+<div class="card">
+AI Detection
+<div id="AI" class="status"></div>
+</div>
+
+<div class="card">
+GPU RTX 4070 Ti
+<div class="metric" id="gpu_usage"></div>
+<div class="metric" id="gpu_mem"></div>
+<div class="metric" id="gpu_temp"></div>
 </div>
 
 </div>
 
 <script>
 
-function randomStatus(){
-return Math.random() > 0.3
+function indicator(id,state){
+
+let el = document.getElementById(id)
+
+if(!el) return
+
+if(state){
+
+el.innerHTML = '<span class="online">● ONLINE</span>'
+
+}else{
+
+el.innerHTML = '<span class="offline">● OFFLINE</span>'
+
 }
 
-function update(){
+}
 
-let a=randomStatus()
-let b=randomStatus()
-let c=randomStatus()
+async function load(){
 
-document.getElementById("s1").innerHTML=a?"<span class='online'>ONLINE</span>":"<span class='offline'>OFFLINE</span>"
-document.getElementById("s2").innerHTML=b?"<span class='online'>ONLINE</span>":"<span class='offline'>OFFLINE</span>"
-document.getElementById("s3").innerHTML=c?"<span class='online'>ONLINE</span>":"<span class='offline'>OFFLINE</span>"
+try{
+
+let r = await fetch("/status")
+
+let d = await r.json()
+
+indicator("Starlink", d.Starlink)
+indicator("RouterUtama", d.RouterUtama)
+indicator("RouterCCTV", d.RouterCCTV)
+indicator("CCTV", d.CCTV)
+indicator("AI", d.AI)
+
+document.getElementById("gpu_usage").innerHTML = "Usage : " + d.GPU.usage
+document.getElementById("gpu_mem").innerHTML = "VRAM : " + d.GPU.memory
+document.getElementById("gpu_temp").innerHTML = "Temp : " + d.GPU.temp
+
+document.getElementById("time").innerHTML = "Last Update : " + d.time
+
+}catch(e){
+
+document.getElementById("time").innerHTML = "Server not reachable"
 
 }
 
-setInterval(update,3000)
-update()
+}
+
+setInterval(load,2000)
+
+load()
 
 </script>
 
