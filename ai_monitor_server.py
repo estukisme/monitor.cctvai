@@ -2,8 +2,10 @@ import subprocess
 import psutil
 import time
 from flask import Flask, jsonify, send_from_directory
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 devices = {
     "Starlink": "192.168.110.1",
