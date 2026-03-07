@@ -135,7 +135,7 @@ async function load(){
 
 try{
 
-let r = await fetch("/status")
+let r = await fetch("http://192.168.110.55:5000/status")
 
 let d = await r.json()
 
@@ -166,4 +166,5 @@ load()
 </script>
 
 </body>
+
 </html>
